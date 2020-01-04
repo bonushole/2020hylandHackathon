@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+
+<style>
+
+	div.bigGuy{
+		width: 90%;
+		height: 50px;
+		border: 1px solid black;
+	}
+	
+	div.SourceClips{
+		width: 50%;
+		height: 40px;
+		border: 1px solid black;
+	}
+	
+	div.emptyCell{
+		width: 40px;
+		height: 40px;
+		border: 5px solid black;
+		display:inline-block;
+	}
+
+</style>
+
+<head>
+<!--
+<style>
+#div1, #div2 {
+  float: left;
+  width: 100px;
+  height: 35px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid black;
+}
+-->
+</style>
+<script>
+window.onload = updateTimeline;
+
+var segments = [];
+
+function updateTimeline(){
+
+	var timeline = document.getElementById("timeline");
+	
+	var divs = [];
+	
+	var newDiv = document.createElement("div");
+	
+	newDiv.className = "emptyCell";
+	timeline.appendChild(newDiv);
+	
+	
+	
+	newDiv = document.createElement("div");
+	
+	newDiv.className = "emptyCell";
+	timeline.appendChild(newDiv);
+
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+</script>
+</head>
+<body>
+
+<h2>Drag and Drop</h2>
+<p>Drag the image back and forth between the two div elements.</p>
+
+<div id="sourceClips" class="SourceClips"></div>
+
+<div id="timeline" class ="bigGuy" ondrop="drop(event)" ondragover="allowDrop(event)"S>
+  <!--<img src="img_w3slogo.gif" draggable="true" ondragstart="drag(event)" id="drag1"> 
+  -->
+</div>
+
+
+
+<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" width="100"></div>
+
+</body>
+</html>

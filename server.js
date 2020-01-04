@@ -4,7 +4,9 @@ var url = require('url');
 var fs = require('fs');
 
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = 8081;
+
+//console.log(('b' + 'a' + + 'a' + 'a').toLowerCase());
 
 const server = http.createServer((req, res) => {
 	res.statusCode = 200;
@@ -20,6 +22,14 @@ const server = http.createServer((req, res) => {
 			res.end();
 		});
 	});
+	}else if(q.pathname == "/edit"){
+
+		fs.readFile("./bigImportantVideoEditPage.html", function(err, data) {
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			res.write(data + "");
+			res.end();
+		});
+
 	} else{
 
 
