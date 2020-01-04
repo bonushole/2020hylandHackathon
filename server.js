@@ -3,7 +3,9 @@ var manipulations = require('clipTest.js');
 var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');
-
+var segments = [];
+var sources = [];
+var currID = 0;
 const hostname = '127.0.0.1';
 const port = 8081;
 
@@ -16,7 +18,9 @@ const server = http.createServer((req, res) => {
 		var form = new formidable.IncomingForm();
 		form.parse(req, function (err, fields, files) {
 		var oldpath = files.filetoupload.path;
-		var newpath = './IN/' + files.filetoupload.name;
+		var newpath = './IN/' + currID +".mp4";
+		sources.push({ID: currID, Name: files.filetoupload.name});
+		currID++;
 		fs.rename(oldpath, newpath, function (err) {
 			if (err) throw err;
 			res.write('File uploaded and moved!');
@@ -30,6 +34,47 @@ const server = http.createServer((req, res) => {
 			res.write(data + "");
 			res.end();
 		});
+
+	} else if(q.pathname == "/move"){
+		var qdata = q.query;
+		var moveID = qdata.moveID;
+		var destinationID = qdata.destinationID;
+		
+		//rearrange segments
+		
+		//Find index of object to move in front of
+		index = -1;
+		
+		temp = segments[moveID];
+		segments.splice(moveID);
+		
+		for(i = 0; i < segments.length; i++){
+			if(segments[i].segmentID == destinationID){
+				index = i;
+			}
+		}
+		//put it there
+		segments.insert(index, temp)
+
+
+	} else if(q.pathname == "/insert"){
+		var qdata = q.query;
+		var sourceFileID = qdata.sourceFileID;
+		var start = qdata.start;
+		var end = qdata.end;
+		var totalLength= qdata.totalLength;
+		var afterID = qdata.afterID;
+		
+		//create segment
+		var temp = {sourceFileID: sourceFileID, start: start, end: end, segmentID: segmentID, totalLength: totalLength}
+		//rearrange segments
+		index = -1;
+		for(i = 0; i < segments.length; i++){
+			if(segments[i].segmentID == destinationID){
+				index = i;
+			}
+		}
+		segments.insert(index, temp)
 
 	} else{
 
