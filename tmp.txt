@@ -1,5 +1,4 @@
-file 'C:/Users/noxid/Documents/GitHub/2020hylandHackathon/TEMP/4333.mp4
-file 'C:/Users/noxid/Documents/GitHub/2020hylandHackathon/TEMP/4642.mp4
-file 'C:/Users/noxid/Documents/GitHub/2020hylandHackathon/TEMP/5379.mp4
-file 'C:/Users/noxid/Documents/GitHub/2020hylandHackathon/TEMP/7603.mp4
-file 'C:/Users/noxid/Documents/GitHub/2020hylandHackathon/TEMP/undefined.mp4
+file ./TEMP/3541.mp4
+file ./TEMP/295.mp4
+file ./TEMP/2757.mp4
+file ./TEMP/2976.mp4

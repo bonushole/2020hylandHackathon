@@ -21,8 +21,8 @@ function concat(ids){
 	text = "";
 	
 	//generate path texts
-	for (i = 0; i <= ids.length; i++){
-		text += "file 'C:/Users/noxid/Documents/GitHub/2020hylandHackathon/TEMP/"+ids[i]+".mp4\n";
+	for (i = 0; i < ids.length; i++){
+		text += "file ./TEMP/"+ids[i]+".mp4\n";
 	}
 	console.log('paths generated...');
 	//write tmp.txt
