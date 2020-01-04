@@ -65,7 +65,9 @@ h2 {
 
 	width: 50%;
 	height: 90px;
-	border: 2px solid black
+	border: 2px solid black;
+	overflow-x:scroll;
+	white-space: nowrap;
 
 }
 
