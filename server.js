@@ -1,9 +1,6 @@
 const http = require('http');
-<<<<<<< HEAD
-//var manipulations = require('clipTest.js');
-=======
 var manipulations = require('./clipTest.js');
->>>>>>> 9e3909fcf51f3876fe387f03080b22b9e278b688
+
 var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');
