@@ -3,6 +3,9 @@ const http = require('http');
 var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');
+//var cors = require('cors');
+const fetch = require("node-fetch");
+
 var segments = [];
 var sources = [];
 var currID = 0;
@@ -18,9 +21,11 @@ const server = http.createServer((req, res) => {
 		var form = new formidable.IncomingForm();
 		form.parse(req, function (err, fields, files) {
 		var oldpath = files.filetoupload.path;
+		console.log(oldpath);
 		var newpath = './IN/' + currID +".mp4";
 		sources.push({ID: currID, Name: files.filetoupload.name});
 		currID++;
+		console.log(newpath);
 		fs.rename(oldpath, newpath, function (err) {
 			if (err) throw err;
 			res.write('File uploaded and moved!');
