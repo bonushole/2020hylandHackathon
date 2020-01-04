@@ -132,6 +132,7 @@ const server = http.createServer((req, res) => {
 	} else if(q.pathname == "/render"){
 		//render video
 		manipulations.generate(segments);
+		res.end();
 		//serve download 
 
 
@@ -170,6 +171,80 @@ const server = http.createServer((req, res) => {
 			res.writeHead(200, {'Content-Type': 'img/png'});
 			res.write(data + "");
 			res.end();
+		});
+		
+		
+	}else if(q.pathname == "/clear"){
+		console.log('fuckin clearin bb')
+		segments = [];
+		sources = [];
+		
+		//fs-ish bullshit
+		fs.readdir('./IN', function(err, files) {
+			if(files != undefined){
+				for(i  = 0; i < files.length; i++){
+					if(files[i].endsWith('.mp4')){
+						console.log('./IN/'+files[i] + ' was deleted');
+						fs.unlink('./IN/'+files[i], (err) => {
+							if (err) throw err;
+
+						});
+					}
+				}
+			}
+			else{
+				console.log('undef1')
+			}
+		});
+		
+		fs.readdir('./TEMP', function(err, files) {
+			if(files != undefined){
+				for(i  = 0; i < files.length; i++){
+					if(files[i].endsWith('.mp4')){
+						console.log('./TEMP/'+files[i] + ' was deleted');
+						fs.unlink('./TEMP/'+files[i], (err) => {
+							if (err) throw err;
+						});
+					}
+				}
+			}
+			else{
+				console.log('undef2')
+			}
+		});
+		
+		fs.readdir('./THUMBS', function(err, files) {
+			if(files != undefined){
+				for(i  = 0; i < files.length; i++){
+					
+					if(files[i].endsWith('.png')){
+						console.log('./THUMBS/'+files[i] + ' was deleted');
+						fs.unlink('./THUMBS/'+files[i], (err) => {
+							if (err) throw err;
+						});
+					}
+				}
+			}
+			else{
+				console.log('undef3')
+			}
+		});
+		
+		fs.readdir('./OUT', function(err, files) {
+			if(files != undefined){
+				for(i  = 0; i < files.length; i++){
+					
+					if(files[i].endsWith('.mp4')){
+						console.log('./OUT/'+files[i] + ' was deleted');
+						fs.unlink('./OUT/'+files[i], (err) => {
+							if (err) throw err;
+						});
+					}
+				}
+			}
+			else{
+				console.log('undef4')
+			}
 		});
 		
 		

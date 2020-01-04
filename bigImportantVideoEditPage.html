@@ -272,10 +272,23 @@ function render(){
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			
+			//document.getElementById("downloadButton").visibility = "visible";
 		}
 	};
 	xhttp.open("GET", "/render", true);
+	xhttp.send();
+
+}
+
+function clr(){
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			fuckthis()
+		}
+	};
+	xhttp.open("GET", "/clear", true);
 	xhttp.send();
 
 }
@@ -382,6 +395,16 @@ function pollSources(){
 	
 }
 
+function fuckthis() {
+  var x = document.getElementById("downloadbutton");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+  console.log('this')
+}
+
 
 </script>
 </head>
@@ -415,8 +438,9 @@ function pollSources(){
 <div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" width="100"></div>
 
 <button onclick="render()">render</button>
-<a href="./OUT/1.mp4" download="result.mp4">
-	<button>download</button>
+<a  href="./OUT/1.mp4" download="result.mp4" >
+	<button id="downloadbutton" >download</button>
 </a>
+<button onclick="clr()">clear</button>
 </body>
 </html>

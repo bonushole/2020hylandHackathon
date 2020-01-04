@@ -29,10 +29,7 @@ function concat(ids){
 		//actual ffmpeg call
 		let randID = Math.floor(Math.random()* 10000);
 		let args = ["-f", "concat", "-safe","0", "-i", "tmp.txt", "-c", "copy", "OUT/"+1+".mp4"];
-		const ffmpeg = spawn(ffmpegPath, args);
-		ffmpeg.on('exit', function (code) {
-			console.log('Child process exited with exit code '+code);
-		});
+		const ffmpeg = spawnSync(ffmpegPath, args);
 		return randID
 	});
 
