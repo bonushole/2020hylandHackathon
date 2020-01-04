@@ -13,6 +13,9 @@ var currID = 0;
 const hostname = '127.0.0.1';
 const port = 8081;
 
+segmentResStack = [];
+sourcesResStack = [];
+
 //console.log(('b' + 'a' + + 'a' + 'a').toLowerCase());
 
 const server = http.createServer((req, res) => {
@@ -34,6 +37,7 @@ const server = http.createServer((req, res) => {
 			manipulations.createThumb(currID - 1)
 			
 			var json = JSON.stringify(sources);
+			emptySourcesRequests()
 			res.write(json);
 			res.end();
 		});
@@ -54,7 +58,28 @@ const server = http.createServer((req, res) => {
 		
 		//MOVE: Moves specified clip to after the destination given
 		//Takes moveID, destinationID
-	} else if(q.pathname == "/move"){
+	}else if(q.pathname == "/retrieveSegments"){
+	
+		var json = JSON.stringify(segments);
+		res.write(json);
+		res.end();
+			
+	}else if(q.pathname == "/retrieveSources"){
+	
+		var json = JSON.stringify(sources);
+		res.write(json);
+		res.end();
+	
+	}else if(q.pathname == "/holdSegmentsRequest"){
+	
+		segmentResStack.push(res);
+			
+	}else if(q.pathname == "/holdSourcesRequest"){
+	
+		sourcesResStack.push(res);
+	
+	}
+	 else if(q.pathname == "/move"){
 		var qdata = q.query;
 		var moveID = qdata.moveID;
 		var destinationID = qdata.destinationID;
@@ -68,7 +93,9 @@ const server = http.createServer((req, res) => {
 		index = searchByID(destinationID)
 		//put it there
 		segments.splice(index, 0, temp)
-
+		emptySegmentRequests()
+		
+		
 		//INSERT: Adds clip after specified segment ID
 		//Takes sourceFileID, afterID
 
@@ -77,7 +104,7 @@ const server = http.createServer((req, res) => {
 		var sourceFileID = qdata.sourceFileID;
 		var start = 0;
 		var afterID = qdata.afterID;
-		var segmentID = Math.floor(Math.random()* 10000);
+		var segmentID = Math.floor(Math.random()* 10000000);
 		
 		let x = manipulations.getLength(sourceFileID)
 		
@@ -93,6 +120,7 @@ const server = http.createServer((req, res) => {
 		segments.splice(index, 0, temp)
 		
 		var json = JSON.stringify(segments);
+		emptySegmentRequests()
 		res.write(json);
 		res.end();
 
@@ -120,7 +148,7 @@ const server = http.createServer((req, res) => {
 			newStart = 0;
 		temp.start = newStart;
 		temp.end = newEnd;
-		
+		emptySegmentRequests()
 		//DELETE: Remove the specified clip from the sequence
 		//Takes ID
 	}else if(q.pathname == "/delete"){
@@ -130,7 +158,7 @@ const server = http.createServer((req, res) => {
 	
 		index = searchByID(ID);
 		segments.splice[index];
-		
+		emptySegmentRequests()
 		//THUMB: load the thumbnail for the specified ID
 		//Takes ID
 	}else if(q.pathname == "/thumb"){
@@ -176,6 +204,34 @@ const server = http.createServer((req, res) => {
 server.listen(port, hostname, () => {
 	console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+
+function emptySegmentRequests(){
+
+	var json = JSON.stringify(segments);
+	for(res in segmentResStack){
+	
+		res.write(json);
+		res.end();
+		
+	}
+
+}
+
+
+function emptySourcesRequests(){
+
+	var json = JSON.stringify(sources);
+	for(res in sourcesResStack){
+	
+		res.write(json);
+		res.end();
+		
+	}
+
+
+}
+
 
 //Helper function to find sequence index given object ID
 function searchByID(id){

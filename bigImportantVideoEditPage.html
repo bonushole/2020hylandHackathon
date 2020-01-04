@@ -58,6 +58,8 @@ var host = window.location.host;
 
 function initialize(){
 
+	fetchSegments();
+	fetchSources();
 	
 
 }
@@ -281,6 +283,70 @@ function doSubmit(oFormElement){
 	);
 	*/
 }
+
+function fetchSegments(){
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			segments = JSON.parse(this.responseText);
+			updateTimeline();
+		}
+	};
+	xhttp.open("GET", "/retrieveSegments", true);
+	xhttp.send();
+	
+}
+
+function fetchSources(){
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			clips = JSON.parse(this.responseText);
+			updateClips();
+			//pollSources();
+		}
+	};
+	xhttp.open("GET", "/retrieveSources", true);
+	xhttp.send();
+	
+}
+
+
+function pollSegments(){
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.timeout=100000;
+	xhttp.ontimeout = pollSegments;
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			segments = JSON.parse(this.responseText);
+			updateTimeline();
+			pollSegments();
+		}
+	};
+	xhttp.open("GET", "/holdSegmentsRequest", true);
+	xhttp.send();
+	
+}
+
+function pollSources(){
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.timeout=100000;
+	xhttp.ontimeout = pollSources;
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			clips = JSON.parse(this.responseText);
+			updateClips();
+		}
+	};
+	xhttp.open("GET", "/holdSourcesRequest", true);
+	xhttp.send();
+	
+}
+
 
 </script>
 </head>
