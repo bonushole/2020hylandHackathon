@@ -1,11 +1,12 @@
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const spawnSync = require('child_process').spawnSync;
 const spawn = require('child_process').spawn;
+const VideoLib = require('node-video-lib');
 const fs = require('fs');
 var ids = [];
 
 
-
+console.log(getLength(1));
 
 
 //Concat method
@@ -85,8 +86,23 @@ function createThumbs(ID){
 	let args = ["-i", "./IN/"+ID+".mp4", '-ss', '00:00:01.000', '-vframes', '1', './THUMBS/'+ID+'.png'] 
 	const ffmpeg = spawnSync(ffmpegPath, args);
 }
+
+function getLength(sourceID){
+	fd = fs.openSync('./IN/'+sourceID+'.mp4', 'r')
+    try {
+        let movie = VideoLib.MovieParser.parse(fd);
+        // Work with movie
+        return(movie.relativeDuration()*1000);
+    } catch (ex) {
+        console.error('Error:', ex);
+    } finally{
+		fs.closeSync(fd);
+	}
+	
+}
 	
 exports.generate = generate;
 exports.createThumb =  createThumbs;
+exports.getLength = getLength;
 	
 	

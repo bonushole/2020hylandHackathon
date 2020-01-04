@@ -51,7 +51,9 @@ const server = http.createServer((req, res) => {
 			res.write(data + "");
 			res.end();
 		});
-
+		
+		//MOVE: Moves specified clip to after the destination given
+		//Takes moveID, destinationID
 	} else if(q.pathname == "/move"){
 		var qdata = q.query;
 		var moveID = qdata.moveID;
@@ -67,15 +69,22 @@ const server = http.createServer((req, res) => {
 		//put it there
 		segments.splice(index, 0, temp)
 
+		//INSERT: Adds clip after specified segment ID
+		//Takes sourceFileID, afterID
 
 	} else if(q.pathname == "/insert"){
 		var qdata = q.query;
 		var sourceFileID = qdata.sourceFileID;
-		var start = qdata.start;
-		var end = qdata.end;
-		var totalLength= qdata.totalLength;
+		var start = 0;
 		var afterID = qdata.afterID;
 		var segmentID = Math.floor(Math.random()* 10000);
+		
+		let x = manipulations.getLength(sourceID)
+		
+		var end = x
+		var totalLength= x
+		
+		
 		
 		//create segment
 		var temp = {sourceFileID: sourceFileID, start: start, end: end, segmentID: segmentID, totalLength: totalLength}
@@ -87,11 +96,17 @@ const server = http.createServer((req, res) => {
 		res.write(json);
 		res.end();
 
+		//RENDER: Renders the current sequence and outputs the file to ./OUT with a unique ID
+		//Takes no arguments
+
 	} else if(q.pathname == "/render"){
 		//render video
 		manipulations.generate(segments);
 		//serve download 
 
+
+		//CUT: Changes the duration of the specified clip to be between the bounds of start and end
+		//Takes ID, start, end
 	}else if(q.pathname == "/cut"){
 		
 		var qdata = q.query;
@@ -106,14 +121,18 @@ const server = http.createServer((req, res) => {
 		temp.start = newStart;
 		temp.end = newEnd;
 		
-
+		//DELETE: Remove the specified clip from the sequence
+		//Takes ID
 	}else if(q.pathname == "/delete"){
 		
 		var qdata = q.query;
 		var ID = q.ID;
 	
 		index = searchByID(ID);
-		segments.splice[index]
+		segments.splice[index];
+		
+		//THUMB: load the thumbnail for the specified ID
+		//Takes ID
 	}else if(q.pathname == "/thumb"){
 	
 		var id = q.id;
@@ -158,6 +177,7 @@ server.listen(port, hostname, () => {
 	console.log(`Server running at http://${hostname}:${port}/`);
 });
 
+//Helper function to find sequence index given object ID
 function searchByID(id){
 	i = 0;
 	var index = 0;
