@@ -76,7 +76,12 @@ const server = http.createServer((req, res) => {
 		}
 		segments.insert(index, temp)
 
-	} else{
+	} else if(q.pathname == "/render"){
+		//render video
+		manipulations.generate(segments);
+
+
+	}else{
 
 
 		res.writeHead(200, {'Content-Type': 'text/html'});
