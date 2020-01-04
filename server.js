@@ -1,6 +1,6 @@
 const http = require('http');
-//var manipulations = require('clipTest.js');
-//var formidable = require('formidable');
+var manipulations = require('./clipTest.js');
+var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');
 //var cors = require('cors');
@@ -31,6 +31,13 @@ const server = http.createServer((req, res) => {
 			res.write('File uploaded and moved!');
 			res.end();
 		});
+		
+		//Do thumbs stuff
+		manipulations.createThumb(currID)
+	
+		
+		
+		
 	});
 	}else if(q.pathname == "/edit"){
 
@@ -121,7 +128,7 @@ server.listen(port, hostname, () => {
 });
 
 function searchByID(id){
-	i = -1;
+	i = 0;
 	for(i = 0; i < segments.length; i++){
 		if(segments[i] == id){
 			index = i;
