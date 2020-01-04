@@ -1,0 +1,61 @@
+/* Background 1 color: #7e767e;
+   Background 2 color: #323432;
+   Font-Family: Varela Round;
+*/
+
+body {
+
+  background-color: #323432;
+  Font-Family: Optima;
+
+}
+
+h1 {
+
+  color: #6666ff;
+  font-family: Varela Round, serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 400%
+
+}
+
+
+h2 {
+  
+  color: white;
+  font-family: Varela Round;
+  text-align: center;
+  font-size: 120%;
+
+}
+
+div {
+
+  color: white;
+  font-family: Varela Round;
+
+  background-color: #5a5c5c;
+  width: 90%;
+  height: auto;
+  border 15px;
+  border-color: #6666ff;
+  border-style: solid;
+
+  padding-left: 2.5%;
+  padding-top: 2.5%;
+  padding-bottom: 50%;
+
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 5%;
+
+
+}
+
+p {
+
+  color: white;
+  font-family: Varela Round;
+
+}
