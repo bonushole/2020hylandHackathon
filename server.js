@@ -1,4 +1,5 @@
 const http = require('http');
+var manipulations = require('clipTest.js');
 var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');
@@ -15,7 +16,7 @@ const server = http.createServer((req, res) => {
 		var form = new formidable.IncomingForm();
 		form.parse(req, function (err, fields, files) {
 		var oldpath = files.filetoupload.path;
-		var newpath = './videos/' + 		files.filetoupload.name;
+		var newpath = './IN/' + files.filetoupload.name;
 		fs.rename(oldpath, newpath, function (err) {
 			if (err) throw err;
 			res.write('File uploaded and moved!');
