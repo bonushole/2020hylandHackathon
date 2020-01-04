@@ -65,7 +65,7 @@ const server = http.createServer((req, res) => {
 		
 		index = searchByID(destinationID)
 		//put it there
-		segments.insert(index, temp)
+		segments.splice(index, 0, temp)
 
 
 	} else if(q.pathname == "/insert"){
@@ -75,12 +75,17 @@ const server = http.createServer((req, res) => {
 		var end = qdata.end;
 		var totalLength= qdata.totalLength;
 		var afterID = qdata.afterID;
+		var segmentID = Math.floor(Math.random()* 10000);
 		
 		//create segment
 		var temp = {sourceFileID: sourceFileID, start: start, end: end, segmentID: segmentID, totalLength: totalLength}
 		//rearrange segments
 		index = searchByID(afterID)
-		segments.insert(index, temp)
+		segments.splice(index, 0, temp)
+		
+		var json = JSON.stringify(segments);
+		res.write(json);
+		res.end();
 
 	} else if(q.pathname == "/render"){
 		//render video
@@ -155,6 +160,7 @@ server.listen(port, hostname, () => {
 
 function searchByID(id){
 	i = 0;
+	var index = 0;
 	for(i = 0; i < segments.length; i++){
 		if(segments[i] == id){
 			index = i;

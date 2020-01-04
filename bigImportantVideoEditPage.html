@@ -5,7 +5,7 @@
 
 	div.bigGuy{
 		width: 90%;
-		height: 70px;
+		height: 80px;
 		border: 1px solid black;
 		overflow-x:scroll;
 		white-space: nowrap;
@@ -19,7 +19,7 @@
 	}
 	
 	div.emptyCell{
-		width: 40px;
+		width: 20px;
 		height: 40px;
 		border: 5px solid black;
 		white-space: nowrap;
@@ -130,7 +130,7 @@ function updateClips(){
 		segment.appendChild(thisThumb.image);//thumbs.src;
 		
 		segment.draggable = "true";
-		segment.ondragstart = "drag(event)";
+		segment.ondragstart = drag;
 		
 		segment.className = "segment";
 		sourceClips.appendChild(segment);
@@ -154,16 +154,18 @@ function updateTimeline(){
 	
 	newDiv.className = "emptyCell";
 	timeline.appendChild(newDiv);
-	
-	for(segment in segments){
-	
+	console.log(segments);
+	for(var i = 0; i < segments.length; i++){
 		
-		var segment = document.createElement("div");
-		segment.className = "segment";
-		timeline.appendChild(segment);
+		var segment = segments[i];
+		console.log(segment);
+		
+		var segmentDiv = document.createElement("div");
+		segmentDiv.className = "segment";
+		timeline.appendChild(segmentDiv);
 		
 		thumb = getThumbFromId(segment.sourceFileID);
-		segment.appendChild(thumb.image);
+		segmentDiv.appendChild(thumb.image);
 		
 		newDiv = document.createElement("div");
 		
@@ -187,6 +189,7 @@ function drag(ev) {
 	while( (child = child.previousSibling) != null ){ 
 		index++;
 	}
+	console.log("source index");
 	console.log(index);
 	ev.dataTransfer.setData("text", clips[index].id);
 }
@@ -195,6 +198,8 @@ function drop(ev) {
 	//ev.preventDefault();
 	var id = parseInt(ev.dataTransfer.getData("text"));
 	//ev.target.appendChild(document.getElementById(data));
+	console.log("source id");
+	console.log(id);
   	var child = ev.target;
   
 	var index = 0;
@@ -203,18 +208,25 @@ function drop(ev) {
 	}
 	index = index/2;
 	
+	var following;
 	
+	if(index ==0){
+		following = -1;
+	}else{
+		following  = segments[index -1].segmentID;
+	}
 	
-	segments.splice(index,0,"");
-	updateTimeline();
+	ajaxInsert(id, following);
+	//segments.splice(index,0,"");
+	//updateTimeline();
 }
 
 function ajaxInsert(clipId, segmentFollowing){
-
+	console.log("inserting");
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			segments = this.responseText;
+			segments = JSON.parse(this.responseText);
 			updateTimeline();
 		}
 	};
