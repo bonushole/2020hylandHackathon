@@ -63,6 +63,53 @@ function initialize(){
 
 }
 
+function getThumbFromId(ID){
+
+	var thisThumb = null;
+	for(thumb in thumbs){
+		
+			if(thumb.id == ID){
+			
+				thisThumb = thumb;
+			
+			}
+		
+		}
+		
+		if(thisThumb == null){
+			var newImg = new Image;
+			var canvas = document.createElement("CANVAS");
+			canvas.height = 30;
+			canvas.width = 30;
+			//segment.appendChild(canvas);	
+			newImg.onload = function() {
+				canvas = null;
+				console.log("loaded image");
+	    			console.log(this.src.split("/"));
+	    			var id = parseInt((this.src).split("/")[(this.src).split("/").length - 1].split(".")[0]);
+	    			console.log(id);
+	    			for(var i = 0; i< thumbs.length; i++){
+	    				thumb = thumbs[i];
+	    				console.log(thumb.id +"  " +id);
+	    				if(thumb.id == id){
+	    				
+	    					canvas = thumb.image
+	    				}
+	    				
+	    			}
+	    			
+				canvas.getContext("2d").drawImage(this,0,0,30,30);
+	    			
+    			}
+		
+		newImg.src = '/THUMBS/'+ID+'.png';
+			thisThumb = {id:ID, image:canvas};
+			thumbs.push(thisThumb);
+		}
+		return thisThumb;
+
+}
+
 function updateClips(){
 
 	var sourceClips = document.getElementById("sourceClips");
@@ -77,37 +124,10 @@ function updateClips(){
 		console.log(clip);
 		var segment = document.createElement("div");
 		
-		var thisThumb = null;
+		var thisThumb = getThumbFromId(clip.id);
 		
-		/*
-		for(thumb in thumbs){
 		
-			if(thumb.id == clip.id){
-			
-				thisThumb = thumb;
-			
-			}
-		
-		}
-		
-		if(thisThumb == null){
-			var newImg = new Image;
-			newImg.src = '/THUMBS/'+clip.id+'.png';
-			thisThumb = {id:clip.id, image:newImg};
-			thumbs.push(thisThumb);
-		}
-		*/
-		
-		var newImg = new Image;
-		
-		newImg.onload = function() {
-			console.log("loaded image");
-    			segment.src = this.src;
-    		}
-		
-		newImg.src = '/THUMBS/'+clip.id+'.png';
-		
-		//segment.appendChild(thisThumb.image);//thumbs.src;
+		segment.appendChild(thisThumb.image);//thumbs.src;
 		
 		segment.draggable = "true";
 		segment.ondragstart = "drag(event)";
@@ -142,6 +162,9 @@ function updateTimeline(){
 		segment.className = "segment";
 		timeline.appendChild(segment);
 		
+		thumb = getThumbFromId(segment.sourceFileID);
+		segment.appendChild(thumb.image);
+		
 		newDiv = document.createElement("div");
 		
 		newDiv.className = "emptyCell";
@@ -158,12 +181,19 @@ function allowDrop(ev) {
 }
 
 function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
+
+	var index = 0;
+	var child = ev.target;
+	while( (child = child.previousSibling) != null ){ 
+		index++;
+	}
+	console.log(index);
+	ev.dataTransfer.setData("text", clips[index].id);
 }
 
 function drop(ev) {
 	//ev.preventDefault();
-	//var data = ev.dataTransfer.getData("text");
+	var id = parseInt(ev.dataTransfer.getData("text"));
 	//ev.target.appendChild(document.getElementById(data));
   	var child = ev.target;
   
@@ -172,15 +202,31 @@ function drop(ev) {
 		index++;
 	}
 	index = index/2;
+	
+	
+	
 	segments.splice(index,0,"");
 	updateTimeline();
+}
+
+function ajaxInsert(clipId, segmentFollowing){
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			segments = this.responseText;
+			updateTimeline();
+		}
+	};
+	xhttp.open("GET", "/insert?sourceFileID=" + clipId + "&afterID=" + segmentFollowing + "&start=0&end=0&totalLength=0", true);
+	xhttp.send();
+	
 }
 
 function doSubmit(oFormElement){
 	console.log("got here");
 	var xhr = new XMLHttpRequest();
 	xhr.onload = function(){
-		
 		clips = JSON.parse(xhr.responseText);
 		updateClips();
 		
