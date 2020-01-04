@@ -65,6 +65,7 @@ function generate(segments){
 
 	}
 	console.log(ids);
+
 	ret = concat(ids);
 	console.log('generation complete')
 	return ret;
