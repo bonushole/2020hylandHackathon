@@ -1,6 +1,6 @@
 const http = require('http');
 //var manipulations = require('clipTest.js');
-//var formidable = require('formidable');
+var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');
 //var cors = require('cors');
@@ -28,7 +28,8 @@ const server = http.createServer((req, res) => {
 		console.log(newpath);
 		fs.rename(oldpath, newpath, function (err) {
 			if (err) throw err;
-			res.write('File uploaded and moved!');
+			var json = JSON.stringify(sources);
+			res.write(json);
 			res.end();
 		});
 	});

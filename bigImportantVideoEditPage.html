@@ -52,7 +52,8 @@
 window.onload = initialize;
 
 var segments = [];
-var clips = [1,1];
+var clips = [];
+var thumbs = [];
 var host = window.location.host;
 
 function initialize(){
@@ -66,9 +67,35 @@ function updateClips(){
 
 	var sourceClips = document.getElementById("sourceClips");
 	
+	while(sourceClips.firstChild){
+		sourceClips.removeChild(sourceClips.firstChild);
+	}
+	
 	for(clip in clips){
 	
 		var segment = document.createElement("div");
+		
+		var thisThumb = null;
+		
+		for(thumb in thumbs){
+		
+			if(thumb.id == clip.id){
+			
+				thisThumb = thumb;
+			
+			}
+		
+		}
+		
+		if(thisThumb == null){
+			var newImg = new Image;
+			newImg.src = host+'/thumb?id='+clip.id;
+			thisThumb = {id:clip.id, image:newImg};
+			thumbs.push(thisThumb);
+		}
+		
+		segment.src = thumbs.src;
+		
 		segment.draggable = "true";
 		segment.ondragstart = "drag(event)";
 		
@@ -76,6 +103,7 @@ function updateClips(){
 		sourceClips.appendChild(segment);
 	
 	}
+	console.log(thumbs);
 
 }
 
@@ -138,7 +166,12 @@ function drop(ev) {
 function doSubmit(oFormElement){
 	console.log("got here");
 	var xhr = new XMLHttpRequest();
-	xhr.onload = function(){ alert (xhr.responseText); } // success case
+	xhr.onload = function(){
+		
+		clips = JSON.parse(xhr.responseText);
+		updateClips();
+		
+	 } // success case
 	xhr.onerror = function(){ alert (xhr.responseText); } // failure case
 	xhr.open (oFormElement.method, oFormElement.action, true);
 	xhr.send (new FormData (oFormElement));
