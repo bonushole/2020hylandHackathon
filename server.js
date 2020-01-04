@@ -1,6 +1,6 @@
 const http = require('http');
 //var manipulations = require('clipTest.js');
-var formidable = require('formidable');
+//var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');
 //var cors = require('cors');
@@ -47,17 +47,11 @@ const server = http.createServer((req, res) => {
 		
 		//rearrange segments
 		
-		//Find index of object to move in front of
-		index = -1;
-		
+		//Find index of object to move in front of	
 		temp = segments[moveID];
 		segments.splice(moveID);
 		
-		for(i = 0; i < segments.length; i++){
-			if(segments[i].segmentID == destinationID){
-				index = i;
-			}
-		}
+		index = searchByID(destinationID)
 		//put it there
 		segments.insert(index, temp)
 
@@ -73,20 +67,38 @@ const server = http.createServer((req, res) => {
 		//create segment
 		var temp = {sourceFileID: sourceFileID, start: start, end: end, segmentID: segmentID, totalLength: totalLength}
 		//rearrange segments
-		index = -1;
-		for(i = 0; i < segments.length; i++){
-			if(segments[i].segmentID == destinationID){
-				index = i;
-			}
-		}
+		index = searchByID(afterID)
 		segments.insert(index, temp)
 
 	} else if(q.pathname == "/render"){
 		//render video
 		manipulations.generate(segments);
+		//serve download 
 
+	}else if(q.pathname == "/cut"){
+		
+		var qdata = q.query;
+		var ID = q.ID;
+		var newStart = q.start;
+		var newEnd = q.end;
+		var temp = segments[searchByID(ID)];
+		if(newEnd > temp.totalLength)
+			newEnd = totalLength;
+		if(newStart < 0)
+			newStart = 0;
+		temp.start = newStart;
+		temp.end = newEnd;
+		
 
-	}else{
+	}else if(q.pathname == "/delete"){
+		
+		var qdata = q.query;
+		var ID = q.ID;
+	
+		index = searchByID(ID);
+		segments.splice[index]
+	}
+	else{
 
 
 		res.writeHead(200, {'Content-Type': 'text/html'});
@@ -107,3 +119,13 @@ const server = http.createServer((req, res) => {
 server.listen(port, hostname, () => {
 	console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+function searchByID(id){
+	i = -1;
+	for(i = 0; i < segments.length; i++){
+		if(segments[i] == id){
+			index = i;
+		}
+	}
+	return index;
+}
