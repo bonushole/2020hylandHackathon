@@ -31,12 +31,17 @@ h2 {
 
 }
 
-div {
+#central {
 
   color: white;
   font-family: Varela Round;
 
   background-color: #5a5c5c;
+
+}
+
+.container {
+
   width: 90%;
   height: auto;
   border 15px;
@@ -45,12 +50,53 @@ div {
 
   padding-left: 2.5%;
   padding-top: 2.5%;
-  padding-bottom: 50%;
+  padding-bottom: 2.5%;
 
   margin-left: 5%;
   margin-right: 5%;
   margin-bottom: 5%;
 
+}
+
+#sourceClips{
+
+	background-color: #a6a6a6;
+
+
+	width: 50%;
+	height: 90px;
+	border: 2px solid black
+
+}
+
+#timeline{
+
+	background-color: #a6a6a6;	
+
+	width: 90%;
+	height: 80px;
+	border: 2px solid black;
+	overflow-x:scroll;
+	white-space: nowrap;
+	float: left;
+
+}
+
+#div2{
+
+	
+
+}
+
+#emptyCell {
+
+	
+
+}
+
+#segment {
+
+	
 
 }
 
