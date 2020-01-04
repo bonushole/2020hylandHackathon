@@ -136,13 +136,30 @@ function drop(ev) {
 }
 
 function doSubmit(){
+	console.log("got here");
 	var file = document.getElementById("file");
+	/*
 	var request = new XMLHttpRequest();
 	request.open('POST', host + "/upload");
-	request.setRequestHeader('content-type', 'application/json');
+	request.setRequestHeader('content-type', 'multipart/form-data');
 	request.send({
 		"filetoupload": file 
-	});
+	});*/
+	var url = host +"/upload";
+	fetch(url, {
+		method : "POST",
+		body: new FormData(document.getElementById("inputform")),
+    // -- or --
+    // body : JSON.stringify({
+        // user : document.getElementById('user').value,
+        // ...
+    // })
+	}).then(
+		response => response.text() // .json(), etc.
+    // same as function(response) {return response.text();}
+	).then(
+	html => console.log(html)
+	);
 }
 
 </script>
@@ -152,9 +169,9 @@ function doSubmit(){
 <h2>Drag and Drop</h2>
 <p>Drag the image back and forth between the two div elements.</p>
 
-<form>
+<form id = "inputform">
 <input id="file" type="file" name="filetoupload"><br>
-<button type="button" onclick="">upload</button>
+<button type="button" onclick="doSubmit()">upload</button>
 </form>
 
 <div id="sourceClips" class="SourceClips"></div>
