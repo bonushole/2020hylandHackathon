@@ -28,18 +28,20 @@ const server = http.createServer((req, res) => {
 		console.log(oldpath);
 		var newpath = './IN/' + currID +".mp4";
 		sources.push({id: currID, Name: files.filetoupload.name});
-		currID++;
+
 		console.log(newpath);
 		fs.rename(oldpath, newpath, function (err) {
 			if (err) throw err;
 			
 			//Do thumbs stuff
-			manipulations.createThumb(currID - 1)
+			manipulations.createThumb(currID)
 			
 			var json = JSON.stringify(sources);
 			emptySourcesRequests()
 			res.write(json);
+			currID++;
 			res.end();
+		
 		});
 		
 		
@@ -245,7 +247,7 @@ function searchByID(id){
 	i = 0;
 	var index = 0;
 	for(i = 0; i < segments.length; i++){
-		if(segments[i] == id){
+		if(segments[i].segmentID == id){
 			index = i;
 		}
 	}
