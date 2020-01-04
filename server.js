@@ -71,11 +71,11 @@ const server = http.createServer((req, res) => {
 		res.end();
 	
 	}else if(q.pathname == "/holdSegmentsRequest"){
-	
+		console.log("pushing to stack");
 		segmentResStack.push(res);
 			
 	}else if(q.pathname == "/holdSourcesRequest"){
-	
+		console.log("pushing to stack");
 		sourcesResStack.push(res);
 	
 	}
@@ -209,12 +209,16 @@ server.listen(port, hostname, () => {
 function emptySegmentRequests(){
 
 	var json = JSON.stringify(segments);
-	for(res in segmentResStack){
-	
+	console.log(segmentResStack.length);
+	for(var i; i < segmentResStack.length; i++){
+		res = segmentResStack[i];
+		
+		//console.log(res);
 		res.write(json);
 		res.end();
 		
 	}
+	segmentResStack = [];
 
 }
 
@@ -222,12 +226,15 @@ function emptySegmentRequests(){
 function emptySourcesRequests(){
 
 	var json = JSON.stringify(sources);
-	for(res in sourcesResStack){
-	
+	console.log(sourcesResStack.length);
+	for(var i = 0; i < sourcesResStack.length; i++){
+		res = sourcesResStack[i];
+		//console.log(res);
 		res.write(json);
 		res.end();
 		
 	}
+	sourcesResStack = [];
 
 
 }

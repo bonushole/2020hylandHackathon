@@ -64,50 +64,62 @@ function initialize(){
 
 }
 
-function getThumbFromId(ID){
+function getThumbFromId(thisId, sourceId){
 
 	var thisThumb = null;
-	for(thumb in thumbs){
+	
+	
+	for(var i=0; i < thumbs.length; i++){
 		
-			if(thumb.id == ID){
-			
-				thisThumb = thumb;
-			
-			}
+		var thumb = thumbs[i];	
+		console.log("found thumbnail");
+		if(thumb.id == thisId){
+		
+			thisThumb = thumb;
 		
 		}
 		
-		if(thisThumb == null){
-			var newImg = new Image;
-			var canvas = document.createElement("CANVAS");
-			canvas.height = 30;
-			canvas.width = 30;
-			//segment.appendChild(canvas);	
-			newImg.onload = function() {
-				canvas = null;
-				console.log("loaded image");
-	    			console.log(this.src.split("/"));
-	    			var id = parseInt((this.src).split("/")[(this.src).split("/").length - 1].split(".")[0]);
-	    			console.log(id);
-	    			for(var i = 0; i< thumbs.length; i++){
-	    				thumb = thumbs[i];
-	    				console.log(thumb.id +"  " +id);
-	    				if(thumb.id == id){
-	    				
-	    					canvas = thumb.image
-	    				}
-	    				
-	    			}
-	    			
-				canvas.getContext("2d").drawImage(this,0,0,30,30);
-	    			
+	}
+		
+	
+	if(thisThumb == null){
+		var newImg = new Image;
+		var canvas = document.createElement("CANVAS");
+		canvas.height = 30;
+		canvas.width = 30;
+		//segment.appendChild(canvas);	
+		newImg.onload = function() {
+			canvases = [];
+	//		document.querySelector(this.src).replaceWith(this);
+			/*
+			console.log("loaded image");
+    			console.log(this.src.split("/"));
+    			var id = parseInt((this.src).split("/")[(this.src).split("/").length - 1].split(".")[0]);
+    			console.log(id);
+    			for(var i = 0; i< thumbs.length; i++){
+    				thumb = thumbs[i];
+    				console.log(thumb.id +"  " +id);
+    				if(thumb.id == id){
+    				
+    					canvases.push(thumb.image);
+    				}
+    				
     			}
-		
-		newImg.src = '/THUMBS/'+ID+'.png';
-			thisThumb = {id:ID, image:canvas};
-			thumbs.push(thisThumb);
+    			*/
+    			canvas.getContext("2d").drawImage(this,0,0,30,30);
+    			/*
+    			for(var i = 0; i < canvases.length; i++){
+    				canvas = canvases[i];	
+				canvas.getContext("2d").drawImage(this,0,0,30,30);
+    			}
+    			*/
 		}
-		return thisThumb;
+	
+		newImg.src = '/THUMBS/'+sourceId+'.png';
+		thisThumb = {id:thisId, image:canvas};
+		thumbs.push(thisThumb);
+	}
+	return thisThumb;
 
 }
 
@@ -125,7 +137,7 @@ function updateClips(){
 		console.log(clip);
 		var segment = document.createElement("div");
 		
-		var thisThumb = getThumbFromId(clip.id);
+		var thisThumb = getThumbFromId(clip.id, clip.id);
 		
 		
 		segment.appendChild(thisThumb.image);//thumbs.src;
@@ -165,7 +177,7 @@ function updateTimeline(){
 		segmentDiv.className = "segment";
 		timeline.appendChild(segmentDiv);
 		
-		thumb = getThumbFromId(segment.sourceFileID);
+		thumb = getThumbFromId(segment.segmentID, segment.sourceFileID);
 		segmentDiv.appendChild(thumb.image);
 		
 		newDiv = document.createElement("div");
@@ -238,6 +250,23 @@ function ajaxInsert(clipId, segmentFollowing){
 	
 }
 
+function cloneCanvas(oldCanvas) {
+
+    //create a new canvas
+    var newCanvas = document.createElement('canvas');
+    var context = newCanvas.getContext('2d');
+
+    //set dimensions
+    newCanvas.width = oldCanvas.width;
+    newCanvas.height = oldCanvas.height;
+
+    //apply the old canvas to the new one
+    context.drawImage(oldCanvas, 0, 0);
+
+    //return the new canvas
+    return newCanvas;
+}
+
 function render(){
 
 	var xhttp = new XMLHttpRequest();
@@ -291,6 +320,8 @@ function fetchSegments(){
 		if (this.readyState == 4 && this.status == 200) {
 			segments = JSON.parse(this.responseText);
 			updateTimeline();
+			//pollSegments();
+			setTimeout(fetchSegments,2000);
 		}
 	};
 	xhttp.open("GET", "/retrieveSegments", true);
@@ -306,6 +337,7 @@ function fetchSources(){
 			clips = JSON.parse(this.responseText);
 			updateClips();
 			//pollSources();
+			setTimeout(fetchSources,2000);
 		}
 	};
 	xhttp.open("GET", "/retrieveSources", true);
@@ -317,10 +349,11 @@ function fetchSources(){
 function pollSegments(){
 	
 	var xhttp = new XMLHttpRequest();
-	xhttp.timeout=100000;
+	xhttp.timeout=9999999999999999;
 	xhttp.ontimeout = pollSegments;
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
+			console.log("receiving long polling data");
 			segments = JSON.parse(this.responseText);
 			updateTimeline();
 			pollSegments();
@@ -334,12 +367,14 @@ function pollSegments(){
 function pollSources(){
 	
 	var xhttp = new XMLHttpRequest();
-	xhttp.timeout=100000;
+	xhttp.timeout=9999999999999999;
 	xhttp.ontimeout = pollSources;
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
+			console.log("receiving long polling data");
 			clips = JSON.parse(this.responseText);
 			updateClips();
+			pollSources();
 		}
 	};
 	xhttp.open("GET", "/holdSourcesRequest", true);
