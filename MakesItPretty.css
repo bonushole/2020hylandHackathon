@@ -6,8 +6,8 @@
 
 body {
 
-  background-color: #323432;
-  Font-Family: Optima;
+  background-color: #000000;
+  font-family: Varela Round, serif;
 
 }
 
@@ -17,13 +17,16 @@ h1 {
   font-family: Varela Round, serif;
   font-weight: bold;
   text-align: center;
-  font-size: 400%
+  font-size: 400%;
+
+  margin-top: .5%;
+  margin-bottom: .5%;
 
 }
 
 
 h2 {
-  
+
   color: white;
   font-family: Varela Round;
   text-align: center;
@@ -36,13 +39,13 @@ h2 {
   color: white;
   font-family: Varela Round;
 
-  background-color: #5a5c5c;
+  background-color: #323432;
 
 }
 
 .container {
 
-  width: 90%;
+  width: 87%;
   height: auto;
   border 15px;
   border-color: #6666ff;
@@ -58,14 +61,19 @@ h2 {
 
 }
 
+form:hover{
+  opacity:0.8;
+  filter:alpha(opacity=80);
+}
+
 #sourceClips{
 
-	background-color: #a6a6a6;
+	background-color:#323432;
 
 
 	width: 50%;
-	height: 90px;
-	border: 2px solid black;
+	height: 25%;
+	border: 2px solid #6666ff;
 	overflow-x:scroll;
 	white-space: nowrap;
 
@@ -73,11 +81,11 @@ h2 {
 
 #timeline{
 
-	background-color: #a6a6a6;	
+	background-color: #323432;
 
-	width: 90%;
-	height: 80px;
-	border: 2px solid black;
+	width: 87.5%;
+	height: 25%;
+	border: 2px solid #6666ff;
 	overflow-x:scroll;
 	white-space: nowrap;
 	float: left;
@@ -86,7 +94,7 @@ h2 {
 
 #div2{
 
-	
+
 
 }
 
@@ -104,7 +112,7 @@ h2 {
 
 	width: 40px;
 	height: 40px;
-	border: 5px #6666ff;	
+	border: 5px #6666ff;
 	white-space: nowrap;
 	display:inline-block;
 
