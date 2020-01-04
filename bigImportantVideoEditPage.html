@@ -198,6 +198,8 @@ function drop(ev) {
 	//ev.preventDefault();
 	var id = parseInt(ev.dataTransfer.getData("text"));
 	//ev.target.appendChild(document.getElementById(data));
+	
+	console.log(segments);
 	console.log("source id");
 	console.log(id);
   	var child = ev.target;
@@ -233,6 +235,19 @@ function ajaxInsert(clipId, segmentFollowing){
 	xhttp.open("GET", "/insert?sourceFileID=" + clipId + "&afterID=" + segmentFollowing + "&start=0&end=0&totalLength=0", true);
 	xhttp.send();
 	
+}
+
+function render(){
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			
+		}
+	};
+	xhttp.open("GET", "/render", true);
+	xhttp.send();
+
 }
 
 function doSubmit(oFormElement){
@@ -298,6 +313,8 @@ function doSubmit(oFormElement){
 
 
 <div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" width="100"></div>
+
+<button onclick="render()">render</button>
 
 </body>
 </html>

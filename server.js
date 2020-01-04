@@ -79,7 +79,7 @@ const server = http.createServer((req, res) => {
 		var afterID = qdata.afterID;
 		var segmentID = Math.floor(Math.random()* 10000);
 		
-		let x = manipulations.getLength(sourceID)
+		let x = manipulations.getLength(sourceFileID)
 		
 		var end = x
 		var totalLength= x
