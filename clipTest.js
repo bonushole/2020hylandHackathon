@@ -6,7 +6,7 @@ const fs = require('fs');
 var ids = [];
 
 
-console.log(getLength(1));
+
 
 
 //Concat method
@@ -28,7 +28,7 @@ function concat(ids){
 		console.log('file generated...');
 		//actual ffmpeg call
 		let randID = Math.floor(Math.random()* 10000);
-		let args = ["-f", "concat", "-safe","0", "-i", "tmp.txt", "-c", "copy", "OUT/"+randID+".mp4"];
+		let args = ["-f", "concat", "-safe","0", "-i", "tmp.txt", "-c", "copy", "OUT/"+1+".mp4"];
 		const ffmpeg = spawn(ffmpegPath, args);
 		ffmpeg.on('exit', function (code) {
 			console.log('Child process exited with exit code '+code);
@@ -37,6 +37,7 @@ function concat(ids){
 	});
 
 }
+
 
 //Cut method
 //takes segment id to be cut from /IN, start time, and end time, places cut clip in /TEMP
@@ -105,5 +106,5 @@ function getLength(sourceID){
 exports.generate = generate;
 exports.createThumb =  createThumbs;
 exports.getLength = getLength;
-	
+
 	
