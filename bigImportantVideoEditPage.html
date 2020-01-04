@@ -5,13 +5,16 @@
 
 	div.bigGuy{
 		width: 90%;
-		height: 50px;
+		height: 70px;
 		border: 1px solid black;
+		overflow-x:scroll;
+		white-space: nowrap;
+		float: left;
 	}
 	
 	div.SourceClips{
 		width: 50%;
-		height: 40px;
+		height: 90px;
 		border: 1px solid black;
 	}
 	
@@ -19,6 +22,14 @@
 		width: 40px;
 		height: 40px;
 		border: 5px solid black;
+		white-space: nowrap;
+		display:inline-block;
+	}
+	div.segment{
+		width: 40px;
+		height: 40px;
+		border: 5px solid blue;
+		white-space: nowrap;
 		display:inline-block;
 	}
 
@@ -38,13 +49,42 @@
 -->
 </style>
 <script>
-window.onload = updateTimeline;
+window.onload = initialize;
 
 var segments = [];
+var clips = [1,1];
+
+function initialize(){
+
+	updateClips();
+	updateTimeline();
+
+}
+
+function updateClips(){
+
+	var sourceClips = document.getElementById("sourceClips");
+	
+	for(clip in clips){
+	
+		var segment = document.createElement("div");
+		segment.draggable = "true";
+		segment.ondragstart = "drag(event)";
+		
+		segment.className = "segment";
+		sourceClips.appendChild(segment);
+	
+	}
+
+}
 
 function updateTimeline(){
 
 	var timeline = document.getElementById("timeline");
+	
+	while(timeline.firstChild){
+		timeline.removeChild(timeline.firstChild);
+	}
 	
 	var divs = [];
 	
@@ -53,12 +93,21 @@ function updateTimeline(){
 	newDiv.className = "emptyCell";
 	timeline.appendChild(newDiv);
 	
+	for(segment in segments){
+	
+		
+		var segment = document.createElement("div");
+		segment.className = "segment";
+		timeline.appendChild(segment);
+		
+		newDiv = document.createElement("div");
+		
+		newDiv.className = "emptyCell";
+		timeline.appendChild(newDiv);
+	
+	}
 	
 	
-	newDiv = document.createElement("div");
-	
-	newDiv.className = "emptyCell";
-	timeline.appendChild(newDiv);
 
 }
 
@@ -71,9 +120,18 @@ function drag(ev) {
 }
 
 function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  ev.target.appendChild(document.getElementById(data));
+	//ev.preventDefault();
+	//var data = ev.dataTransfer.getData("text");
+	//ev.target.appendChild(document.getElementById(data));
+  	var child = ev.target;
+  
+	var index = 0;
+	while( (child = child.previousSibling) != null ){ 
+		index++;
+	}
+	index = index/2;
+	segments.splice(index,0,"");
+	updateTimeline();
 }
 </script>
 </head>
