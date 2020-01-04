@@ -228,7 +228,7 @@ function drop(ev) {
 	if(index ==0){
 		following = -1;
 	}else{
-		following  = segments[index -1].segmentID;
+		following  = segments[index].segmentID;
 	}
 	
 	ajaxInsert(id, following);
@@ -285,7 +285,7 @@ function clr(){
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			fuckthis()
+	
 		}
 	};
 	xhttp.open("GET", "/clear", true);
@@ -395,15 +395,7 @@ function pollSources(){
 	
 }
 
-function fuckthis() {
-  var x = document.getElementById("downloadbutton");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
-  console.log('this')
-}
+
 
 
 </script>
