@@ -2,13 +2,7 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const spawnSync = require('child_process').spawnSync;
 const spawn = require('child_process').spawn;
 const fs = require('fs');
-
-
-seg = [[1,0,1000],[2,0,2000],[3,2000,3000],[4,1000,4000]];
-console.log('output ID is:  '+ generate(seg));
-
-
-
+var ids = [];
 
 
 
@@ -30,16 +24,17 @@ function concat(ids){
 		if (err) throw err;
 		// success case, the file was saved
 		console.log('paths saved');
+		console.log('file generated...');
+		//actual ffmpeg call
+		let randID = Math.floor(Math.random()* 10000);
+		let args = ["-f", "concat", "-safe","0", "-i", "tmp.txt", "-c", "copy", "OUT/"+randID+".mp4"];
+		const ffmpeg = spawn(ffmpegPath, args);
+		ffmpeg.on('exit', function (code) {
+			console.log('Child process exited with exit code '+code);
+		});
+		return randID
 	});
-	console.log('file generated...');
-	//actual ffmpeg call
-	let randID = Math.floor(Math.random()* 10000);
-	let args = ["-f", "concat", "-safe","0", "-i", "tmp.txt", "-c", "copy", "OUT/"+randID+".mp4"];
-	const ffmpeg = spawn(ffmpegPath, args);
-	ffmpeg.on('exit', function (code) {
-		console.log('Child process exited with exit code '+code);
-	});
-	return randID
+
 }
 
 //Cut method
@@ -68,10 +63,28 @@ function generate(segments){
 		ids.push(cut(segments[i][0], segments[i][1], segments[i][2]));
 	}
 	console.log(ids);
-	
-	return concat(ids);
+	ret = concat(ids);
+	return ret;
+}
+
+function free(){
+	for(i = 0; i < ids.length; i++){
+		fs.unlink("./TEMP/"+ids[i]+".mp4", (err) => {
+		if (err) {
+			console.error(err)
+			return
+		}
+
+		//file removed
+		})
+	}
+}
+
+function createThumbs(ID){
+	let args = ["-i", "./IN/"+ID+".mp4", '-ss', '00:00:01.000', '-vframes', '1', './THUMBS/'+ID+'.png'] 
+	const ffmpeg = spawnSync(ffmpegPath, args);
 }
 	
-//export function generate(segments);
+exports.generate = generate;
 	
 	
