@@ -185,6 +185,20 @@ const server = http.createServer((req, res) => {
 				res.end();
 			});
 		}
+		
+		
+		
+		if(q.pathname.endsWith("css")){
+			console.log("."+q.pathname);
+			fs.readFile("."+q.pathname, function(err, data) {
+				if(err) console.log("error");
+				
+				res.writeHead(200, {'Content-Type': 'text/css'});
+				console.log(data);
+				res.write(data);
+				res.end();
+			});
+		}
 		/*
 		res.writeHead(200, {'Content-Type': 'text/html'});
 		res.write('<form action="upload" method="post" enctype="multipart/form-data">');
