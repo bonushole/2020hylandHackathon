@@ -71,12 +71,15 @@ function updateClips(){
 		sourceClips.removeChild(sourceClips.firstChild);
 	}
 	
-	for(clip in clips){
-	
+	console.log(clips);
+	for(var i = 0; i< clips.length; i++){
+		var clip = clips[i];
+		console.log(clip);
 		var segment = document.createElement("div");
 		
 		var thisThumb = null;
 		
+		/*
 		for(thumb in thumbs){
 		
 			if(thumb.id == clip.id){
@@ -89,12 +92,22 @@ function updateClips(){
 		
 		if(thisThumb == null){
 			var newImg = new Image;
-			newImg.src = host+'/thumb?id='+clip.id;
+			newImg.src = '/THUMBS/'+clip.id+'.png';
 			thisThumb = {id:clip.id, image:newImg};
 			thumbs.push(thisThumb);
 		}
+		*/
 		
-		segment.src = thumbs.src;
+		var newImg = new Image;
+		
+		newImg.onload = function() {
+			console.log("loaded image");
+    			segment.src = this.src;
+    		}
+		
+		newImg.src = '/THUMBS/'+clip.id+'.png';
+		
+		//segment.appendChild(thisThumb.image);//thumbs.src;
 		
 		segment.draggable = "true";
 		segment.ondragstart = "drag(event)";

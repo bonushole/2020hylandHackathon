@@ -81,10 +81,12 @@ function free(){
 }
 
 function createThumbs(ID){
+	console.log("creating thumb for "+ID);
 	let args = ["-i", "./IN/"+ID+".mp4", '-ss', '00:00:01.000', '-vframes', '1', './THUMBS/'+ID+'.png'] 
 	const ffmpeg = spawnSync(ffmpegPath, args);
 }
 	
 exports.generate = generate;
+exports.createThumb =  createThumbs;
 	
 	

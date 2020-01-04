@@ -1,9 +1,6 @@
 const http = require('http');
-<<<<<<< HEAD
 //var manipulations = require('clipTest.js');
-=======
 var manipulations = require('./clipTest.js');
->>>>>>> 9e3909fcf51f3876fe387f03080b22b9e278b688
 var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');
@@ -27,18 +24,21 @@ const server = http.createServer((req, res) => {
 		var oldpath = files.filetoupload.path;
 		console.log(oldpath);
 		var newpath = './IN/' + currID +".mp4";
-		sources.push({ID: currID, Name: files.filetoupload.name});
+		sources.push({id: currID, Name: files.filetoupload.name});
 		currID++;
 		console.log(newpath);
 		fs.rename(oldpath, newpath, function (err) {
 			if (err) throw err;
+			
+			//Do thumbs stuff
+			manipulations.createThumb(currID - 1)
+			
 			var json = JSON.stringify(sources);
 			res.write(json);
 			res.end();
 		});
 		
-		//Do thumbs stuff
-		manipulations.createThumb(currID)
+		
 	
 		
 		
@@ -109,16 +109,37 @@ const server = http.createServer((req, res) => {
 	
 		index = searchByID(ID);
 		segments.splice[index]
-	}
-	else{
-
-
+	}else if(q.pathname == "/thumb"){
+	
+		var id = q.id;
+		fs.readFile("./THUMBS/"+id+".png", function(err, data) {
+			res.writeHead(200, {'Content-Type': 'img/png'});
+			res.write(data + "");
+			res.end();
+		});
+		
+		
+	}else{
+		if(q.pathname.endsWith("png")){
+			console.log("."+q.pathname);
+			fs.readFile("."+q.pathname, function(err, data) {
+				if(err) console.log("error");
+				
+				res.writeHead(200, {'Content-Type': 'image/png'});
+				console.log(data);
+				res.write(data);
+				res.end();
+			});
+		}
+		/*
 		res.writeHead(200, {'Content-Type': 'text/html'});
 		res.write('<form action="upload" method="post" enctype="multipart/form-data">');
 		res.write('<input type="file" name="filetoupload"><br>');
 		res.write('<input type="submit">');
 		res.write('</form>');
 		return res.end();
+		
+		*/
 		/*
 		res.setHeader('Content-Type', 'text/plain');
 		var string = "Hello World From: \n";
