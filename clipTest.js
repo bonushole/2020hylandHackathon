@@ -38,6 +38,7 @@ function concat(ids){
 
 }
 
+
 //Cut method
 //takes segment id to be cut from /IN, start time, and end time, places cut clip in /TEMP
 //returns temp id
@@ -105,5 +106,5 @@ function getLength(sourceID){
 exports.generate = generate;
 exports.createThumb =  createThumbs;
 exports.getLength = getLength;
-	
+
 	
