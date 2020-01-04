@@ -238,7 +238,7 @@ function searchByID(id){
 	i = 0;
 	var index = 0;
 	for(i = 0; i < segments.length; i++){
-		if(segments[i] == id){
+		if(segments[i].segmentID == id){
 			index = i;
 		}
 	}
