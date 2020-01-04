@@ -1,5 +1,5 @@
 const http = require('http');
-var manipulations = require('clipTest.js');
+//var manipulations = require('clipTest.js');
 var formidable = require('formidable');
 var url = require('url');
 var fs = require('fs');

@@ -53,6 +53,7 @@ window.onload = initialize;
 
 var segments = [];
 var clips = [1,1];
+var host = window.location.host;
 
 function initialize(){
 
@@ -133,12 +134,28 @@ function drop(ev) {
 	segments.splice(index,0,"");
 	updateTimeline();
 }
+
+function doSubmit(){
+	var file = document.getElementById("file");
+	var request = new XMLHttpRequest();
+	request.open('POST', host + "/upload");
+	request.setRequestHeader('content-type', 'application/json');
+	request.send({
+		"filetoupload": file 
+	});
+}
+
 </script>
 </head>
 <body>
 
 <h2>Drag and Drop</h2>
 <p>Drag the image back and forth between the two div elements.</p>
+
+<form>
+<input id="file" type="file" name="filetoupload"><br>
+<button type="button" onclick="">upload</button>
+</form>
 
 <div id="sourceClips" class="SourceClips"></div>
 
