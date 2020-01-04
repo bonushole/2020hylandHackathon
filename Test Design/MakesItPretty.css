@@ -1,5 +1,6 @@
 /* Background 1 color: #7e767e;
    Background 2 color: #323432;
+   Vid.io Text Color: #6666ff;
    Font-Family: Varela Round;
 */
 
@@ -57,5 +58,8 @@ p {
 
   color: white;
   font-family: Varela Round;
+  text-align: center;
+
+  padding-bottom: 5%;
 
 }
