@@ -60,11 +60,12 @@ function cut(id, start, end){
 function generate(segments){
 	ids = [];
 	for(i = 0; i < segments.length; i++){
-		//ids.push(cut(segments[i].sourceFileID, segments[i].start, segments[i].end));
-		ids.push(cut(segments[i][0], segments[i][1], segments[i][2]));
+		ids.push(cut(segments[i].sourceFileID, segments[i].start, segments[i].end));
+
 	}
 	console.log(ids);
 	ret = concat(ids);
+	console.log('generation complete')
 	return ret;
 }
 
