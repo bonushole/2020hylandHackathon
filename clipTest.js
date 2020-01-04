@@ -6,7 +6,7 @@ const fs = require('fs');
 var ids = [];
 
 
-console.log(getLength(1));
+
 
 
 //Concat method
