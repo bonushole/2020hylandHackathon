@@ -1,438 +1,363 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 
-<style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	div.bigGuy{
-		width: 90%;
-		height: 80px;
-		border: 1px solid black;
-		overflow-x:scroll;
-		white-space: nowrap;
-		float: left;
-	}
-	
-	div.SourceClips{
-		width: 50%;
-		height: 90px;
-		border: 1px solid black;
-	}
-	
-	div.emptyCell{
-		width: 20px;
-		height: 40px;
-		border: 5px solid black;
-		white-space: nowrap;
-		display:inline-block;
-	}
-	div.segment{
-		width: 40px;
-		height: 40px;
-		border: 5px solid blue;
-		white-space: nowrap;
-		display:inline-block;
-	}
+	<style>
+		@import url('https://fonts.googleapis.com/css?family=Varela+Round&display=swap');
+	</style>
 
-</style>
+	<head>
+		<link rel="stylesheet" href="MakesItPretty.css">
 
-<head>
-<!--
-<style>
-#div1, #div2 {
-  float: left;
-  width: 100px;
-  height: 35px;
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid black;
-}
--->
-</style>
 <script>
-window.onload = initialize;
+	window.onload = initialize;
 
-var segments = [];
-var clips = [];
-var thumbs = [];
-var host = window.location.host;
+	var segments = [];
+	var clips = [];
+	var thumbs = [];
+	var host = window.location.host;
 
-function initialize(){
+	function initialize(){
 
-	fetchSegments();
-	fetchSources();
+		fetchSegments();
+		fetchSources();
 	
 
-}
-
-function getThumbFromId(thisId, sourceId){
-
-	var thisThumb = null;
-	
-	
-	for(var i=0; i < thumbs.length; i++){
-		
-		var thumb = thumbs[i];	
-		console.log("found thumbnail");
-		if(thumb.id == thisId){
-		
-			thisThumb = thumb;
-		
-		}
-		
 	}
+
+	function getThumbFromId(ID){
+
+		var thisThumb = null;
+		for(thumb in thumbs){
 		
-	
-	if(thisThumb == null){
-		var newImg = new Image;
-		var canvas = document.createElement("CANVAS");
-		canvas.height = 30;
-		canvas.width = 30;
-		//segment.appendChild(canvas);	
-		newImg.onload = function() {
-			canvases = [];
-	//		document.querySelector(this.src).replaceWith(this);
-			/*
-			console.log("loaded image");
-    			console.log(this.src.split("/"));
-    			var id = parseInt((this.src).split("/")[(this.src).split("/").length - 1].split(".")[0]);
-    			console.log(id);
-    			for(var i = 0; i< thumbs.length; i++){
-    				thumb = thumbs[i];
-    				console.log(thumb.id +"  " +id);
-    				if(thumb.id == id){
-    				
-    					canvases.push(thumb.image);
+				if(thumb.id == ID){
+			
+					thisThumb = thumb;
+			
+				}
+		
+			}
+		
+			if(thisThumb == null){
+				var newImg = new Image;
+				var canvas = document.createElement("CANVAS");
+				canvas.height = 30;
+				canvas.width = 30;
+				//segment.appendChild(canvas);	
+				newImg.onload = function() {
+					canvas = null;
+					console.log("loaded image");
+	    				console.log(this.src.split("/"));
+	    				var id = parseInt((this.src).split("/")[(this.src).split("/").length - 1].split(".")[0]);
+	    				console.log(id);
+	    				for(var i = 0; i< thumbs.length; i++){
+	    					thumb = thumbs[i];
+	    					console.log(thumb.id +"  " +id);
+	    					if(thumb.id == id){
+	    				
+	    						canvas = thumb.image
+	    					}
+	    				
+	    				}
+	    			
+					canvas.getContext("2d").drawImage(this,0,0,30,30);
+	    			
     				}
-    				
-    			}
-    			*/
-    			canvas.getContext("2d").drawImage(this,0,0,30,30);
-    			/*
-    			for(var i = 0; i < canvases.length; i++){
-    				canvas = canvases[i];	
-				canvas.getContext("2d").drawImage(this,0,0,30,30);
-    			}
-    			*/
+		
+			newImg.src = '/THUMBS/'+ID+'.png';
+				thisThumb = {id:ID, image:canvas};
+				thumbs.push(thisThumb);
+			}
+			return thisThumb;
+
+	}
+
+	function updateClips(){
+
+		var sourceClips = document.getElementById("sourceClips");
+	
+		while(sourceClips.firstChild){
+			sourceClips.removeChild(sourceClips.firstChild);
 		}
 	
-		newImg.src = '/THUMBS/'+sourceId+'.png';
-		thisThumb = {id:thisId, image:canvas};
-		thumbs.push(thisThumb);
+		console.log(clips);
+		for(var i = 0; i< clips.length; i++){
+			var clip = clips[i];
+			console.log(clip);
+			var segment = document.createElement("div");
+		
+			var thisThumb = getThumbFromId(clip.id);
+		
+		
+			segment.appendChild(thisThumb.image);//thumbs.src;
+		
+			segment.draggable = "true";
+			segment.ondragstart = drag;
+		
+			segment.className = "segment";
+			sourceClips.appendChild(segment);
+		
+		}
+		console.log(thumbs);
+
 	}
-	return thisThumb;
 
-}
+	function updateTimeline(){
 
-function updateClips(){
-
-	var sourceClips = document.getElementById("sourceClips");
+		var timeline = document.getElementById("timeline");
 	
-	while(sourceClips.firstChild){
-		sourceClips.removeChild(sourceClips.firstChild);
-	}
+		while(timeline.firstChild){
+			timeline.removeChild(timeline.firstChild);
+		}
 	
-	console.log(clips);
-	for(var i = 0; i< clips.length; i++){
-		var clip = clips[i];
-		console.log(clip);
-		var segment = document.createElement("div");
-		
-		var thisThumb = getThumbFromId(clip.id, clip.id);
-		
-		
-		segment.appendChild(thisThumb.image);//thumbs.src;
-		
-		segment.draggable = "true";
-		segment.ondragstart = drag;
-		
-		segment.className = "segment";
-		sourceClips.appendChild(segment);
+		var divs = [];
 	
-	}
-	console.log(thumbs);
-
-}
-
-function updateTimeline(){
-
-	var timeline = document.getElementById("timeline");
+		var newDiv = document.createElement("div");
 	
-	while(timeline.firstChild){
-		timeline.removeChild(timeline.firstChild);
-	}
-	
-	var divs = [];
-	
-	var newDiv = document.createElement("div");
-	
-	newDiv.className = "emptyCell";
-	timeline.appendChild(newDiv);
-	console.log(segments);
-	for(var i = 0; i < segments.length; i++){
-		
-		var segment = segments[i];
-		console.log(segment);
-		
-		var segmentDiv = document.createElement("div");
-		segmentDiv.className = "segment";
-		timeline.appendChild(segmentDiv);
-		
-		thumb = getThumbFromId(segment.segmentID, segment.sourceFileID);
-		segmentDiv.appendChild(thumb.image);
-		
-		newDiv = document.createElement("div");
-		
 		newDiv.className = "emptyCell";
 		timeline.appendChild(newDiv);
-	
-	}
-	
-	
-
-}
-
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-function drag(ev) {
-
-	var index = 0;
-	var child = ev.target;
-	while( (child = child.previousSibling) != null ){ 
-		index++;
-	}
-	console.log("source index");
-	console.log(index);
-	ev.dataTransfer.setData("text", clips[index].id);
-}
-
-function drop(ev) {
-	//ev.preventDefault();
-	var id = parseInt(ev.dataTransfer.getData("text"));
-	//ev.target.appendChild(document.getElementById(data));
-	
-	console.log(segments);
-	console.log("source id");
-	console.log(id);
-  	var child = ev.target;
-  
-	var index = 0;
-	while( (child = child.previousSibling) != null ){ 
-		index++;
-	}
-	index = index/2;
-	
-	var following;
-	
-	if(index ==0){
-		following = -1;
-	}else{
-		following  = segments[index].segmentID;
-	}
-	
-	ajaxInsert(id, following);
-	//segments.splice(index,0,"");
-	//updateTimeline();
-}
-
-function ajaxInsert(clipId, segmentFollowing){
-	console.log("inserting");
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			segments = JSON.parse(this.responseText);
-			updateTimeline();
-		}
-	};
-	xhttp.open("GET", "/insert?sourceFileID=" + clipId + "&afterID=" + segmentFollowing + "&start=0&end=0&totalLength=0", true);
-	xhttp.send();
-	
-}
-
-function cloneCanvas(oldCanvas) {
-
-    //create a new canvas
-    var newCanvas = document.createElement('canvas');
-    var context = newCanvas.getContext('2d');
-
-    //set dimensions
-    newCanvas.width = oldCanvas.width;
-    newCanvas.height = oldCanvas.height;
-
-    //apply the old canvas to the new one
-    context.drawImage(oldCanvas, 0, 0);
-
-    //return the new canvas
-    return newCanvas;
-}
-
-function render(){
-
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			//document.getElementById("downloadButton").visibility = "visible";
-		}
-	};
-	xhttp.open("GET", "/render", true);
-	xhttp.send();
-
-}
-
-function clr(){
-
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-	
-		}
-	};
-	xhttp.open("GET", "/clear", true);
-	xhttp.send();
-
-}
-
-function doSubmit(oFormElement){
-	console.log("got here");
-	var xhr = new XMLHttpRequest();
-	xhr.onload = function(){
-		clips = JSON.parse(xhr.responseText);
-		updateClips();
+		console.log(segments);
+		for(var i = 0; i < segments.length; i++){
 		
-	 } // success case
-	xhr.onerror = function(){ alert (xhr.responseText); } // failure case
-	xhr.open (oFormElement.method, oFormElement.action, true);
-	xhr.send (new FormData (oFormElement));
-	return false;
+			var segment = segments[i];
+			console.log(segment);
+		
+			var segmentDiv = document.createElement("div");
+			segmentDiv.className = "segment";
+			timeline.appendChild(segmentDiv);
+		
+			thumb = getThumbFromId(segment.sourceFileID);
+			segmentDiv.appendChild(thumb.image);
+		
+			newDiv = document.createElement("div");
+		
+			newDiv.className = "emptyCell";
+			timeline.appendChild(newDiv);
 	
-	
-	/*
-	var url = host +"/upload";
-	fetch(url, {
-		method : "POST",
-		body: new FormData(document.getElementById("inputform")),
-    // -- or --
-    // body : JSON.stringify({
-        // user : document.getElementById('user').value,
-        // ...
-    // })
-	}).then(
-		response => response.text() // .json(), etc.
-    // same as function(response) {return response.text();}
-	).then(
-	html => console.log(html)
-	);
-	*/
-}
-
-function fetchSegments(){
-	
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			segments = JSON.parse(this.responseText);
-			updateTimeline();
-			//pollSegments();
-			setTimeout(fetchSegments,2000);
 		}
-	};
-	xhttp.open("GET", "/retrieveSegments", true);
-	xhttp.send();
 	
-}
+	
 
-function fetchSources(){
+	}
+
+	function allowDrop(ev) {
+  	ev.preventDefault();
+	}
+
+	function drag(ev) {
+
+		var index = 0;
+		var child = ev.target;
+		while( (child = child.previousSibling) != null ){ 
+			index++;
+		}
+		console.log("source index");
+		console.log(index);
+		ev.dataTransfer.setData("text", clips[index].id);
+	}
+
+	function drop(ev) {
+		//ev.preventDefault();
+		var id = parseInt(ev.dataTransfer.getData("text"));
+		//ev.target.appendChild(document.getElementById(data));
 	
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			clips = JSON.parse(this.responseText);
+		console.log(segments);
+		console.log("source id");
+		console.log(id);
+  		var child = ev.target;
+  
+		var index = 0;
+		while( (child = child.previousSibling) != null ){ 
+			index++;
+		}
+		index = index/2;
+	
+		var following;
+	
+		if(index ==0){
+			following = -1;
+		}else{
+			following  = segments[index -1].segmentID;
+		}
+	
+		ajaxInsert(id, following);
+		//segments.splice(index,0,"");
+		//updateTimeline();
+	}
+
+	function ajaxInsert(clipId, segmentFollowing){
+		console.log("inserting");
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				segments = JSON.parse(this.responseText);
+				updateTimeline();
+			}
+		};
+		xhttp.open("GET", "/insert?sourceFileID=" + clipId + "&afterID=" + segmentFollowing + "&start=0&end=0&totalLength=0", true);
+		xhttp.send();
+	
+	}
+
+	function render(){
+
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+			
+			}
+		};
+		xhttp.open("GET", "/render", true);
+		xhttp.send();
+
+	}
+
+	function doSubmit(oFormElement){
+		console.log("got here");
+		var xhr = new XMLHttpRequest();
+		xhr.onload = function(){
+			clips = JSON.parse(xhr.responseText);
 			updateClips();
-			//pollSources();
-			setTimeout(fetchSources,2000);
-		}
-	};
-	xhttp.open("GET", "/retrieveSources", true);
-	xhttp.send();
+		
+	 	} // success case
+		xhr.onerror = function(){ alert (xhr.responseText); } // failure case
+		xhr.open (oFormElement.method, oFormElement.action, true);
+		xhr.send (new FormData (oFormElement));
+		return false;
 	
-}
+	
+		/*
+		var url = host +"/upload";
+		fetch(url, {
+			method : "POST",
+			body: new FormData(document.getElementById("inputform")),
+    	// -- or --
+    	// body : JSON.stringify({
+        	// user : document.getElementById('user').value,
+        	// ...
+    	// })
+		}).then(
+			response => response.text() // .json(), etc.
+    	// same as function(response) {return response.text();}
+		).then(
+		html => console.log(html)
+		);
+		*/
+	}
+
+	function fetchSegments(){
+	
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				segments = JSON.parse(this.responseText);
+				updateTimeline();
+			}
+		};
+		xhttp.open("GET", "/retrieveSegments", true);
+		xhttp.send();
+	
+	}
+
+	function fetchSources(){
+	
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				clips = JSON.parse(this.responseText);
+				updateClips();
+				//pollSources();
+			}
+		};
+		xhttp.open("GET", "/retrieveSources", true);
+		xhttp.send();
+	
+	}
 
 
-function pollSegments(){
+	function pollSegments(){
 	
-	var xhttp = new XMLHttpRequest();
-	xhttp.timeout=9999999999999999;
-	xhttp.ontimeout = pollSegments;
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			console.log("receiving long polling data");
-			segments = JSON.parse(this.responseText);
-			updateTimeline();
-			pollSegments();
-		}
-	};
-	xhttp.open("GET", "/holdSegmentsRequest", true);
-	xhttp.send();
+		var xhttp = new XMLHttpRequest();
+		xhttp.timeout=100000;
+		xhttp.ontimeout = pollSegments;
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				segments = JSON.parse(this.responseText);
+				updateTimeline();
+				pollSegments();
+			}
+		};
+		xhttp.open("GET", "/holdSegmentsRequest", true);
+		xhttp.send();
 	
-}
+	}
 
-function pollSources(){
+	function pollSources(){
 	
-	var xhttp = new XMLHttpRequest();
-	xhttp.timeout=9999999999999999;
-	xhttp.ontimeout = pollSources;
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			console.log("receiving long polling data");
-			clips = JSON.parse(this.responseText);
-			updateClips();
-			pollSources();
-		}
-	};
-	xhttp.open("GET", "/holdSourcesRequest", true);
-	xhttp.send();
+		var xhttp = new XMLHttpRequest();
+		xhttp.timeout=100000;
+		xhttp.ontimeout = pollSources;
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				clips = JSON.parse(this.responseText);
+				updateClips();
+			}
+		};
+		xhttp.open("GET", "/holdSourcesRequest", true);
+		xhttp.send();
 	
-}
-
-
+	}
 
 
 </script>
-</head>
-<body>
 
-<h2>Drag and Drop</h2>
-<p>Drag the image back and forth between the two div elements.</p>
-
-<!--
-<form id = "inputform">
-<input id="file" type="file" name="filetoupload"><br>
-<button type="button" onclick="doSubmit()">upload</button>
-</form>
--->
-
-<form action="upload" method="post" enctype="multipart/form-data" onsubmit="return doSubmit(this)">
-	<input type="file" name="filetoupload"><br>
-	<input type="submit">
-</form>
+	</head> 
+	
 
 
-<div id="sourceClips" class="SourceClips"></div>
+<!-- START OF THE BODY -->
 
-<div id="timeline" class ="bigGuy" ondrop="drop(event)" ondragover="allowDrop(event)"S>
-  <!--<img src="img_w3slogo.gif" draggable="true" ondragstart="drag(event)" id="drag1"> 
-  -->
-</div>
+	<body>
 
+		<h1> Vid.io </h1>
 
 
-<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" width="100"></div>
+		<h2> The online video editor with an edge -- collaborative, innovative, and creative. </h2>
 
-<button onclick="render()">render</button>
-<a  href="./OUT/1.mp4" download="result.mp4" >
-	<button id="downloadbutton" >download</button>
-</a>
-<button onclick="clr()">clear</button>
-</body>
+
+		<div id="central" class="container"> 
+			Drag the image back and forth between the two div elements <br> <br>
+			<form action="upload" method="post" enctype="multipart/form-data" onsubmit="return doSubmit(this)"> 
+				<input type="file" name="filetoupload">
+				<input type="submit">
+			</form>
+
+			<br style="line-height: 200%;"> <br> <br> <br> <br> 
+
+			<div id="sourceClips" class="SourceClips container"></div>	
+
+			<div id="timeline" class ="bigGuy container" ondrop="drop(event)" ondragover="allowDrop(event)"S> </div>
+
+			<button onclick="render()">render</button>
+
+			<a href="./OUT/1.mp4" download="result.mp4">
+				<button>download</button>
+				</a>
+		</div>
+
+
+		<p> 
+			Brought to you by: Team MAVEN <br>
+			<a href="https://github.com/bonushole/2020hylandHackathon" style="color: #00ccff;"> Visit our code for this project here! </a>
+		</p>
+
+	
+		<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)" width="100"></div>
+
+
+	</body>
+
+	<title> Vid.io </title>
+
 </html>
