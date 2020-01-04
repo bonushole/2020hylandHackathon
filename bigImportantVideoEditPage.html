@@ -175,10 +175,31 @@
 	
 		var following;
 	
+<<<<<<< HEAD
 		if(index ==0){
 			following = -1;
 		}else{
 			following  = segments[index].segmentID;
+=======
+	if(index ==0){
+		following = -1;
+	}else{
+		following  = segments[index -1].segmentID;
+	}
+	
+	ajaxInsert(id, following);
+	//segments.splice(index,0,"");
+	//updateTimeline();
+}
+
+function ajaxInsert(clipId, segmentFollowing){
+	console.log("inserting");
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			segments = JSON.parse(this.responseText);
+			updateTimeline();
+>>>>>>> parent of 9f6e6a7... push it real good
 		}
 	
 		ajaxInsert(id, following);
@@ -213,12 +234,32 @@
 
 	}
 
+<<<<<<< HEAD
 	function doSubmit(oFormElement){
 		console.log("got here");
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function(){
 			clips = JSON.parse(xhr.responseText);
 			updateClips();
+=======
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			fuckthis()
+		}
+	};
+	xhttp.open("GET", "/clear", true);
+	xhttp.send();
+
+}
+
+function doSubmit(oFormElement){
+	console.log("got here");
+	var xhr = new XMLHttpRequest();
+	xhr.onload = function(){
+		clips = JSON.parse(xhr.responseText);
+		updateClips();
+>>>>>>> parent of 9f6e6a7... push it real good
 		
 	 	} // success case
 		xhr.onerror = function(){ alert (xhr.responseText); } // failure case
@@ -309,8 +350,20 @@
 	
 	}
 
+<<<<<<< HEAD
 
 </script>
+=======
+function fuckthis() {
+  var x = document.getElementById("downloadbutton");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+  console.log('this')
+}
+>>>>>>> parent of 9f6e6a7... push it real good
 
 	</head> 
 	
