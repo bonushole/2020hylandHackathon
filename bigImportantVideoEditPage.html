@@ -135,16 +135,17 @@ function drop(ev) {
 	updateTimeline();
 }
 
-function doSubmit(){
+function doSubmit(oFormElement){
 	console.log("got here");
-	var file = document.getElementById("file");
+	var xhr = new XMLHttpRequest();
+	xhr.onload = function(){ alert (xhr.responseText); } // success case
+	xhr.onerror = function(){ alert (xhr.responseText); } // failure case
+	xhr.open (oFormElement.method, oFormElement.action, true);
+	xhr.send (new FormData (oFormElement));
+	return false;
+	
+	
 	/*
-	var request = new XMLHttpRequest();
-	request.open('POST', host + "/upload");
-	request.setRequestHeader('content-type', 'multipart/form-data');
-	request.send({
-		"filetoupload": file 
-	});*/
 	var url = host +"/upload";
 	fetch(url, {
 		method : "POST",
@@ -160,6 +161,7 @@ function doSubmit(){
 	).then(
 	html => console.log(html)
 	);
+	*/
 }
 
 </script>
@@ -169,10 +171,18 @@ function doSubmit(){
 <h2>Drag and Drop</h2>
 <p>Drag the image back and forth between the two div elements.</p>
 
+<!--
 <form id = "inputform">
 <input id="file" type="file" name="filetoupload"><br>
 <button type="button" onclick="doSubmit()">upload</button>
 </form>
+-->
+
+<form action="upload" method="post" enctype="multipart/form-data" onsubmit="return doSubmit(this)">
+	<input type="file" name="filetoupload"><br>
+	<input type="submit">
+</form>
+
 
 <div id="sourceClips" class="SourceClips"></div>
 
