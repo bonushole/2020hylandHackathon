@@ -248,16 +248,21 @@ const server = http.createServer((req, res) => {
 		});
 		
 		
+		
 	}else{
 		if(q.pathname.endsWith("png")){
 			console.log("."+q.pathname);
 			fs.readFile("."+q.pathname, function(err, data) {
-				if(err) console.log("error");
+				if(err) res.end();
 				
 				res.writeHead(200, {'Content-Type': 'image/png'});
 				console.log(data);
-				res.write(data);
-				res.end();
+				if(data == undefined){
+					res.end();
+				}else{
+					res.write(data);
+					res.end();
+				}
 			});
 		}
 
@@ -268,8 +273,12 @@ const server = http.createServer((req, res) => {
 				if(err) console.log("error");
 				res.writeHead(200, {'Content-Type': 'video/mp4'});
 				console.log(data);
-				res.write(data);
-				res.end();
+				if(data == undefined){
+					res.end();
+				}else{
+					res.write(data);
+					res.end();
+				}
 			});
 		}
 		
@@ -281,8 +290,12 @@ const server = http.createServer((req, res) => {
 				if(err) console.log("error");
 				res.writeHead(200, {'Content-Type': 'text/css'});
 				console.log(data);
-				res.write(data);
-				res.end();
+				if(data == undefined){
+					res.end();
+				}else{
+					res.write(data);
+					res.end();
+				}
 			});
 		}
 		/*
