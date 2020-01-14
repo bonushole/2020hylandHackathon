@@ -62,7 +62,7 @@ function generate(segments){
 
 	}
 	console.log(ids);
-
+	
 	ret = concat(ids);
 	console.log('generation complete')
 	return ret;
@@ -87,6 +87,8 @@ function createThumbs(ID){
 	const ffmpeg = spawnSync(ffmpegPath, args);
 }
 
+
+//TODO-- Fix to not use VideoLib and instead use FFmpeg functionalities
 function getLength(sourceID){
 	fd = fs.openSync('./IN/'+sourceID+'.mp4', 'r')
     try {
